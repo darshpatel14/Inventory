@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Product</title>
+
+    <style>
+
+        body{
+            margin:0;
+            padding:0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(120deg,#2980b9,#6dd5fa);
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+
+        .container{
+            background:white;
+            padding:40px;
+            border-radius:10px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.2);
+            width:400px;
+        }
+
+        h2{
+            text-align:center;
+            margin-bottom:25px;
+        }
+
+        .input-group{
+            margin-bottom:20px;
+        }
+
+        label{
+            display:block;
+            font-weight:bold;
+            margin-bottom:5px;
+        }
+
+        input, textarea, select{
+            width:100%;
+            padding:10px;
+            border:1px solid #ccc;
+            border-radius:5px;
+            font-size:14px;
+            box-sizing:border-box;
+        }
+
+        textarea{
+            resize:none;
+            height:80px;
+        }
+
+        input:focus, textarea:focus, select:focus{
+            border-color:#2980b9;
+            outline:none;
+        }
+
+        button{
+            width:100%;
+            padding:12px;
+            background:#27ae60;
+            border:none;
+            color:white;
+            font-size:16px;
+            border-radius:5px;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        button:hover{
+            background:#1e8449;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Add Product</h2>
+
+    <form th:action="@{/saveProduct}" th:object="${product}" method="post">
+
+        <div class="input-group">
+            <label>Product Name</label>
+            <input type="text" th:field="*{productName}" >
+            <p th:if="${#fields.hasErrors('productName')}"
+               th:errors="*{productName}" style="color:red"></p>
+        </div>
+
+        <div class="input-group">
+            <label>Product Description</label>
+            <textarea th:field="*{productDescription}"></textarea>
+            <p th:if="${#fields.hasErrors('productDescription')}"
+               th:errors="*{productDescription}" style="color:red"></p>
+        </div>
+
+
+
+        <div class="input-group">
+            <label>Price</label>
+            <input type="number" th:field="*{price}">
+            <p th:if="${#fields.hasErrors('price')}"
+               th:errors="*{price}" style="color:red"></p>
+        </div>
+
+        <div class="input-group">
+            <label>Stock</label>
+            <input type="number"  th:field="*{stock}">
+            <p th:if="${#fields.hasErrors('stock')}"
+               th:errors="*{stock}" style="color:red"></p>
+        </div>
+
+        <div class="input-group">
+            <label>Category</label>
+
+            <select th:field="*{categoryId}" >
+                <option value="">Select Category</option>
+
+                <option th:each="cat : ${categories}"
+                        th:value="${cat.categoryId}"
+                        th:text="${cat.categoryName}">
+                </option>
+                <p th:if="${#fields.hasErrors('categoryId')}"
+                   th:errors="*{categoryId}" style="color:red"></p>
+            </select>
+
+        </div>
+
+        <div class="input-group">
+            <label>Suppliers</label>
+
+            <select th:field="*{supplierIds}" multiple class="form-control">
+                <option value="">Select Supplier</option>
+
+                <option th:each="sup : ${suppliers}"
+                        th:value="${sup.supplierId}"
+                        th:text="${sup.supplierName}">
+                </option>
+
+            </select>
+
+        </div>
+
+        <button type="submit">Add Product</button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Index</title>
+
+    <style>
+        body{
+            background: linear-gradient(120deg,#2980b9,#6dd5fa);
+            margin: 0;
+        }
+
+        .main-container{
+            display: flex;
+        }
+
+        .navigation-bar{
+            height: 100vh;
+            width: 280px;
+            background-color: white;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 5px;
+        }
+
+        .main-content{
+            width:100%;
+            padding: 20px;
+        }
+
+        .heading{
+            text-align: center;
+            color: #2980b9;
+            font-size: 25px;
+        }
+
+        .btn{
+            margin: 20px;
+            padding: 15px;
+            background-color: #2980b9;
+            color: white;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover{
+            background-color: #27ae60;
+        }
+
+        .dashboard-heading{
+            color: white;
+            margin: 0;
+        }
+
+        .dashboard-header-content{
+            width: auto;
+            height: 150px;
+            display: flex;
+            /*border: 2px solid;*/
+        }
+
+        .dashboard-header-box{
+            width: 200px;
+            height: 100px;
+            margin: 20px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0px 10px 10px slategray;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+        }
+
+        .dashboard-header-box:hover{
+            background-color: #27ae60;
+        }
+
+        .header-box-label{
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .header-box-data{
+            font-size: 20px;
+            text-align: center;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="main-container">
+
+    <div class="navigation-bar">
+        <h1 class="heading">Inventory System</h1>
+        <button class="btn" onclick="loadCategoryForm()">Add Category</button>
+        <button class="btn" onclick="loadProductForm()">Add Product</button>
+        <button class="btn" onclick="loadUserForm()">Add User</button>
+        <button class="btn" onclick="loadCustomerForm()">Add Customer</button>
+        <button class="btn" onclick="loadPurchaseForm()">Add Purchase</button>
+        <button class="btn" onclick="loadSalesForm()">Add Sales</button>
+        <button class="btn" onclick="loadSupplierForm()">Add Supplier</button>
+
+    </div>
+
+    <div class="main-content" >
+        <h2 class="dashboard-heading">Welcome to Dashboard</h2>
+
+        <div class="dashboard-header-content">
+
+            <div class="dashboard-header-box">
+                <label class="header-box-label">Total Products</label>
+                <label class="header-box-data" th:text="${totalProducts}">0</label>
+            </div>
+
+            <div class="dashboard-header-box">
+                <label class="header-box-label">Total Category</label>
+                <label class="header-box-data" th:text="${totalCategories}">0</label>
+            </div>
+
+            <div class="dashboard-header-box">
+                <label class="header-box-label">Total Supplier</label>
+                <label class="header-box-data" th:text="${totalSuppliers}">0</label>
+            </div>
+
+            <div class="dashboard-header-box">
+                <label class="header-box-label">Total Purchase</label>
+                <label class="header-box-data" th:text="${totalPurchase}">0</label>
+            </div>
+
+            <div class="dashboard-header-box">
+                <label class="header-box-label">Total Sales</label>
+                <label class="header-box-data" th:text="${totalSales}">0</label>
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    </script>
+
+</body>
+</html>

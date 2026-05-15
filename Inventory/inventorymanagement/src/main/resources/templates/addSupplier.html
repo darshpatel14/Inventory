@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Add Supplier</title>
+
+  <style>
+
+    body{
+      margin:0;
+      padding:0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(120deg,#2980b9,#6dd5fa);
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .container{
+      background:white;
+      padding:40px;
+      border-radius:10px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.2);
+      width:400px;
+    }
+
+    h2{
+      text-align:center;
+      margin-bottom:25px;
+    }
+
+    .input-group{
+      margin-bottom:20px;
+    }
+
+    label{
+      display:block;
+      font-weight:bold;
+      margin-bottom:5px;
+    }
+
+    input, textarea{
+      width:100%;
+      padding:10px;
+      border:1px solid #ccc;
+      border-radius:5px;
+      font-size:14px;
+    }
+
+    textarea{
+      resize:none;
+      height:80px;
+    }
+
+    input:focus, textarea:focus{
+      border-color:#2980b9;
+      outline:none;
+    }
+
+    button{
+      width:100%;
+      padding:12px;
+      background:#27ae60;
+      border:none;
+      color:white;
+      font-size:16px;
+      border-radius:5px;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    button:hover{
+      background:#1e8449;
+    }
+
+    .error{
+      color: red;
+      font-size: 10px;
+    }
+  </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <h2>Add Supplier</h2>
+
+  <form th:action="@{/saveSupplier}" th:object="${supplier}" method="post">
+
+    <div class="input-group">
+      <label>Supplier Name</label>
+      <input type="text" th:field="*{supplierName}" name="supplierName" >
+      <p th:if="${#fields.hasErrors('supplierName')}"
+         th:errors="*{supplierName}" class="error"></p>
+    </div>
+
+    <div class="input-group">
+      <label>Contact Person</label>
+      <input type="text" th:field="*{contactPerson}" name="contactPerson"  />
+      <p th:if="${#fields.hasErrors('contactPerson')}"
+         th:errors="*{contactPerson}" class="error"></p>
+    </div>
+
+    <div class="input-group">
+      <label>Phone</label>
+      <input th:field="*{phone}"  name="phone" >
+      <p th:if="${#fields.hasErrors('phone')}"
+         th:errors="*{phone}" class="error"></p>
+    </div>
+
+    <div class="input-group">
+      <label>Email</label>
+      <input type="email" th:field="*{email}" name="email" >
+      <p th:if="${#fields.hasErrors('email')}"
+         th:errors="*{email}" class="error"></p>
+    </div>
+
+    <div class="input-group">
+      <label>GST No.</label>
+      <input type="text" th:field="*{gst_no}" name="gst_no" >
+      <p th:if="${#fields.hasErrors('gst_no')}"
+         th:errors="*{gst_no}" class="error"></p>
+    </div>
+
+    <div class="input-group">
+      <label>State</label>
+      <input type="text" th:field="*{state}" name="state" >
+      <p th:if="${#fields.hasErrors('state')}"
+         th:errors="*{state}" class="error"></p>
+    </div>
+
+    <div class="input-group">
+      <label>City</label>
+      <input type="text" th:field="*{city}" name="city" >
+      <p th:if="${#fields.hasErrors('city')}"
+         th:errors="*{city}" class="error"></p>
+    </div>
+
+    <button type="submit">Add Supplier</button>
+
+  </form>
+
+</div>
+
+</body>
+</html>

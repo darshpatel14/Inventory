@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Customer</title>
+</head>
+<style>
+
+
+</style>
+<body>
+
+    <form th:action="@{/saveCustomer}" th:object="${customer}" method="post">
+
+        <h1> Add Customer</h1>
+
+        <div class="container">
+
+            <div>
+                <label>Customer Name:</label>
+                <input type="text" th:field="*{customerName}" name="customerName">
+                <span th:if="${#fields.hasErrors('customerName')}"
+                      th:errors="*{customerName}"></span>
+            </div>
+
+            <br>
+
+            <div>
+                <label>Contact :</label>
+                <input type="number" th:field="*{phone}" name="phone">
+                <span th:if="${#fields.hasErrors('phone')}"
+                      th:errors="*{phone}"></span>
+            </div>
+
+            <br>
+
+
+            <div>
+                <label>Email :</label>
+                <input type="email" th:field="*{email}" name="email">
+                <span th:if="${#fields.hasErrors('email')}"
+                      th:errors="*{email}"></span>
+            </div>
+
+            <br>
+
+
+            <div>
+                <label>State :</label>
+                <input type="text" th:field="*{state}" name="state">
+                <span th:if="${#fields.hasErrors('state')}"
+                      th:errors="*{state}"></span>
+            </div>
+
+            <br>
+
+
+            <div>
+                <label>City :</label>
+                <input type="text" th:field="*{city}" name="city">
+                <span th:if="${#fields.hasErrors('city')}"
+                      th:errors="*{city}"></span>
+            </div>
+
+            <br>
+
+            <button type="submit"> Add Customer </button>
+
+
+        </div>
+    </form>
+
+</body>
+</html>

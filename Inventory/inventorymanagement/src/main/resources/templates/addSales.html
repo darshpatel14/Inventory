@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Sales Form</title>
+
+    <style>
+        body { font-family: Arial; }
+
+        .table-container {
+            max-height:300px;
+            overflow-y:auto;
+            border:1px solid #ccc;
+            margin-top:10px;
+        }
+
+        table {
+            width:100%;
+            border-collapse: collapse;
+        }
+
+        th,td {
+            padding:8px;
+            text-align:left;
+        }
+
+        button {
+            padding:5px 10px;
+            cursor:pointer;
+        }
+
+        .error{
+            color: red;
+            font-size: 10px;
+        }
+    </style>
+
+    <script>
+
+        function reIndexRows() {
+            let rows = document.querySelectorAll("#itemTable tr");
+
+            for (let i = 1; i < rows.length; i++) {
+
+                let inputs = rows[i].querySelectorAll("input, select");
+
+                inputs.forEach(input => {
+                    let name = input.getAttribute("name");
+
+                    if (name) {
+                        let newName = name.replace(/salesItems\[\d+]/, `salesItems[${i-1}]`);
+                        input.setAttribute("name", newName);
+                    }
+                });
+            }
+        }
+
+        function addRow() {
+
+            let table = document.getElementById("itemTable");
+
+            // Correct index calculation
+            let rowCount = table.rows.length - 1; // excluding header
+
+            let productOptions = document.getElementById("productOptions").innerHTML;
+
+            let row = table.insertRow(rowCount + 1); // insert at end
+
+            row.innerHTML = `
+        <td>
+            <select name="salesItems[${rowCount}].productId">
+                ${productOptions}
+            </select>
+        </td>
+
+        <td>
+            <input type="number" name="salesItems[${rowCount}].quantity">
+        </td>
+
+        <td>
+            <input type="number" name="salesItems[${rowCount}].unitPrice">
+        </td>
+
+        <td>
+            <button type="button" onclick="removeRow(this)">
+                Remove
+            </button>
+        </td>
+    `;
+        }
+
+        function removeRow(button) {
+            let row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+            reIndexRows();
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+<h2>Add Sales</h2>
+
+<form th:action="@{/saveSales}" th:object="${sales}" method="post">
+
+    <!-- CUSTOMER -->
+    <label>Customer</label>
+    <select th:field="*{customerID}">
+        <option value="">Select Customer</option>
+        <option th:each="cus : ${customers}"
+                th:value="${cus.id}"
+                th:text="${cus.customerName}">
+        </option>
+    </select>
+    <div class="error"
+         th:if="${#fields.hasErrors('customerID')}"
+         th:errors="*{customerID}">
+    </div>
+
+    <br><br>
+
+    <!-- DATE -->
+    <label>Date</label>
+    <input type="date" th:field="*{salesDate}">
+    <div class="error"
+         th:if="${#fields.hasErrors('salesDate')}"
+         th:errors="*{salesDate}">
+    </div>
+
+    <br><br>
+
+    <!-- HIDDEN TOTAL -->
+    <input type="hidden" th:field="*{totalSalesAmount}">
+
+    <!-- PAYMENT MODE -->
+    <label>Mode Of Payment</label>
+    <input type="text" th:field="*{modeOfPayment}">
+    <div class="error"
+         th:if="${#fields.hasErrors('modeOfPayment')}"
+         th:errors="*{modeOfPayment}">
+    </div>
+
+    <br><br>
+
+    <!-- USER -->
+    <label>Created By</label>
+    <select th:field="*{userId}">
+        <option value="">Select User</option>
+        <option th:each="u : ${users}"
+                th:value="${u.userid}"
+                th:text="${u.username}">
+        </option>
+    </select>
+    <div class="error"
+         th:if="${#fields.hasErrors('userId')}"
+         th:errors="*{userId}">
+    </div>
+
+    <br><br>
+    <hr>
+
+    <!-- ADD ITEM BUTTON -->
+    <button type="button" onclick="addRow()">
+        Add Item
+    </button>
+
+    <h3>Sales Items</h3>
+
+    <!-- Hidden product template -->
+    <select id="productOptions" style="display:none">
+        <option value="">Select</option>
+        <option th:each="p : ${products}"
+                th:value="${p.productId}"
+                th:text="${p.productName}">
+        </option>
+    </select>
+
+    <!-- ITEMS TABLE -->
+    <div class="table-container">
+
+        <table border="1" id="itemTable">
+
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Action</th>
+            </tr>
+
+            <tr th:each="item, stat : *{salesItems}">
+
+                <td>
+                    <select th:field="*{salesItems[__${stat.index}__].productId}">
+                        <option value="">Select</option>
+                        <option th:each="p : ${products}"
+                                th:value="${p.productId}"
+                                th:text="${p.productName}">
+                        </option>
+                    </select>
+                    <div class="error"
+                         th:if="${#fields.hasErrors('salesItems[' + stat.index + '].productId')}"
+                         th:errors="*{salesItems[__${stat.index}__].productId}">
+                    </div>
+                </td>
+
+                <td>
+                    <input type="number" th:field="*{salesItems[__${stat.index}__].quantity}">
+                    <div class="error"
+                         th:if="${#fields.hasErrors('salesItems[' + stat.index + '].quantity')}"
+                         th:errors="*{salesItems[__${stat.index}__].quantity}">
+                    </div>
+                </td>
+
+                <td>
+                    <input type="number" th:field="*{salesItems[__${stat.index}__].unitPrice}">
+                    <div class="error"
+                         th:if="${#fields.hasErrors('salesItems[' + stat.index + '].unitPrice')}"
+                         th:errors="*{salesItems[__${stat.index}__].unitPrice}">
+                    </div>
+                </td>
+
+                <td>
+                    <button type="button" onclick="removeRow(this)">
+                        Remove
+                    </button>
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+    <br><br>
+
+    <button type="submit">Save Sales</button>
+
+</form>
+
+</body>
+</html>

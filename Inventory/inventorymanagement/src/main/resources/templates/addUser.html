@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+
+    <style>
+
+        body{
+            margin:0;
+            padding:0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(120deg,#2980b9,#6dd5fa);
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+
+        .login-container{
+            background:white;
+            padding:40px;
+            border-radius:10px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.2);
+            width:350px;
+            text-align:center;
+        }
+
+        .login-container h2{
+            margin-bottom:25px;
+        }
+
+        .input-group{
+            margin-bottom:20px;
+            text-align:left;
+        }
+
+        .input-group label{
+            display:block;
+            margin-bottom:5px;
+            font-weight:bold;
+        }
+
+        .input-group input, select{
+            width:100%;
+            padding:10px;
+            border:1px solid #ccc;
+            border-radius:5px;
+            font-size:14px;
+        }
+
+        .input-group input:focus{
+            border-color:#2980b9;
+            outline:none;
+        }
+
+        button{
+            width:100%;
+            padding:12px;
+            background:#2980b9;
+            border:none;
+            color:white;
+            font-size:16px;
+            border-radius:5px;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        button:hover{
+            background:#1c5980;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <h2>User Login</h2>
+
+    <form th:action="@{/saveUser}" th:object="${userDTO}" method="post">
+
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" th:field="*{username}" >
+
+        </div>
+
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" th:field="*{password}"  >
+        </div>
+
+        <div class="input-group">
+            <label>Email</label>
+            <input type="email" th:field="*{email}" >
+        </div>
+
+        <div class="input-group">
+            <label>Phone</label>
+            <input type="text" th:field="*{phone}" >
+        </div>
+
+        <div class="input-group">
+            <label>Role</label>
+            <select th:field="*{role}">
+                <option value="ADMIN">Admin</option>
+                <option value="MANAGER">Manager</option>
+            </select>
+        </div>
+
+        <button type="submit">Save User</button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

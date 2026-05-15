@@ -1,0 +1,99 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(120deg, #2980b9, #6dd5fa);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.product-container {
+  background: white;
+  padding: 10px 40px 40px 40px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 500px;
+  height: 100%;
+  margin: 50px auto;
+}
+
+h1, h2 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.product-input-group {
+  margin-bottom: 20px;
+  margin-right: 25px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+
+textarea {
+  resize: none;
+  height: 80px;
+}
+
+
+.pro-button-row {
+  display: flex;
+  gap: 80px;
+  margin-top: 20px;   
+}
+
+.pro-button-row button:first-child {
+ padding: 10px;
+  width: 250px;
+  border: none;
+  border-radius: 2px;
+  background: #007bff;
+  color: white;
+}
+
+.pro-button-row button:last-child {
+ padding: 10px;
+  width: 250px;
+  border: none;
+  border-radius: 2px;
+  background: #6c757d;
+  color: white;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #2980b9;
+  outline: none;
+}
+
+.product-div-row-1, .product-div-row-2{
+    display: flex;
+    gap: 50px;
+}
+
+select{
+  padding: 5px;
+  width: 200px;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Purchase Form</title>
+
+    <style>
+        body { font-family: Arial; }
+
+        .table-container {
+            max-height:300px;
+            overflow-y:auto;
+            border:1px solid #ccc;
+            margin-top:10px;
+        }
+
+        table {
+            width:100%;
+            border-collapse: collapse;
+        }
+
+        th,td {
+            padding:8px;
+            text-align:left;
+        }
+
+        button {
+            padding:5px 10px;
+            cursor:pointer;
+        }
+
+        .error{
+            color: red;
+            font-size: 10px;
+        }
+    </style>
+
+    <script>
+
+        function reIndexRows() {
+            let rows = document.querySelectorAll("#itemTable tr");
+
+            for (let i = 1; i < rows.length; i++) {
+
+                let inputs = rows[i].querySelectorAll("input, select");
+
+                inputs.forEach(input => {
+                    let name = input.getAttribute("name");
+
+                    if (name) {
+                        let newName = name.replace(/purchaseItems\[\d+]/, `purchaseItems[${i-1}]`);
+                        input.setAttribute("name", newName);
+                    }
+                });
+            }
+        }
+
+        function addRow() {
+
+            let table = document.getElementById("itemTable");
+
+            let rowCount = table.rows.length - 1;
+
+            let productOptions = document.getElementById("productOptions").innerHTML;
+
+            let row = table.insertRow(rowCount);
+
+            row.innerHTML = `
+                <td>
+                    <select name="purchaseItems[${rowCount-1}].productId">
+                        ${productOptions}
+                    </select>
+                </td>
+
+                <td>
+                    <input type="number" name="purchaseItems[${rowCount-1}].quantity">
+                </td>
+
+                <td>
+                    <input type="number" name="purchaseItems[${rowCount-1}].unitCost">
+                </td>
+
+                <td>
+                    <button type="button" onclick="removeRow(this)">
+                        Remove
+                    </button>
+                </td>
+            `;
+        }
+
+        function removeRow(button) {
+
+            let row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+
+            reIndexRows();
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+<h2>Add Purchase</h2>
+
+<form th:action="@{/savePurchase}" th:object="${purchase}" method="post">
+
+    <!-- SUPPLIER-->
+    <label>Supplier</label>
+    <select th:field="*{supplierId}">
+        <option value="">Select Supplier</option>
+        <option th:each="sup : ${suppliers}"
+                th:value="${sup.supplierId}"
+                th:text="${sup.supplierName}">
+        </option>
+    </select>
+    <div class="error"
+         th:if="${#fields.hasErrors('supplierId')}"
+         th:errors="*{supplierId}">
+    </div>
+
+    <br><br>
+
+
+    <!-- DATE -->
+    <label>Date</label>
+    <input type="date" th:field="*{purchaseDate}">
+    <div class="error"
+         th:if="${#fields.hasErrors('purchaseDate')}"
+         th:errors="*{purchaseDate}">
+    </div>
+    <br><br>
+
+
+
+    <!-- (Optional display only) -->
+    <input type="hidden" th:field="*{totalAmount}">
+
+
+
+
+    <!-- STATUS -->
+    <label>Status</label>
+    <input type="text" th:field="*{purchaseStatus}">
+    <div class="error"
+         th:if="${#fields.hasErrors('purchaseStatus')}"
+         th:errors="*{purchaseStatus}">
+    </div>
+
+    <br><br>
+    <hr>
+
+
+
+
+    <button type="button" onclick="addRow()">
+        Add Item
+    </button>
+
+
+
+
+    <h3>Purchase Items</h3>
+
+    <!-- Hidden product template -->
+    <select id="productOptions" style="display:none">
+        <option value="">Select</option>
+
+        <option th:each="p : ${products}"
+                th:value="${p.productId}"
+                th:text="${p.productName}">
+        </option>
+    </select>
+
+
+                                                            <!-- ADD ITEMS TABLE -->
+    <div class="table-container">
+
+        <table border="1" id="itemTable">
+
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Unit Cost</th>
+                <th>Action</th>
+            </tr>
+
+            <tr th:each="item, stat : *{purchaseItems}">
+
+                <td>
+                    <select th:field="*{purchaseItems[__${stat.index}__].productId}">
+                        <option value="">Select</option>
+
+                        <option th:each="p : ${products}"
+                                th:value="${p.productId}"
+                                th:text="${p.productName}">
+                        </option>
+                    </select>
+                    <div class="error"
+                         th:if="${#fields.hasErrors('purchaseItems[' + stat.index + '].productId')}"
+                         th:errors="*{purchaseItems[__${stat.index}__].productId}">
+                    </div>
+                </td>
+
+                <td>
+                    <input type="number" th:field="*{purchaseItems[__${stat.index}__].quantity}">
+                    <div class="error"
+                         th:if="${#fields.hasErrors('purchaseItems[' + stat.index + '].quantity')}"
+                         th:errors="*{purchaseItems[__${stat.index}__].quantity}">
+                    </div>
+                </td>
+
+                <td>
+                    <input type="number" th:field="*{purchaseItems[__${stat.index}__].unitCost}">
+                    <div class="error"
+                         th:if="${#fields.hasErrors('purchaseItems[' + stat.index + '].unitCost')}"
+                         th:errors="*{purchaseItems[__${stat.index}__].unitCost}">
+                    </div>
+                </td>
+
+                <td>
+                    <button type="button" onclick="removeRow(this)">
+                        Remove
+                    </button>
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+    <br><br>
+
+    <button type="submit">Save Purchase</button>
+
+</form>
+
+</body>
+</html>
+

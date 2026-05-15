@@ -1,0 +1,189 @@
+body {
+   margin: 0;   
+   align-items: start;
+   background: linear-gradient(120deg,#2980b9,#6dd5fa);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.inventory-container {
+    width: 95%;
+    margin: auto;
+    margin-top: 30px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.inventory-table th,
+.inventory-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+.inventory-table th {
+    background: #007bff;
+    color: white;
+}
+
+.inventory-table tr:nth-child(even) {
+    background: #f2f2f2;
+}
+
+.inventory-table tr:hover {
+    background: #ddd;
+}
+
+.inventory-header{
+    display: flex;
+}
+
+.download-btn{
+    align-items: end;
+    background: #007bff;
+    color: white;
+    width: 150px;
+    height: 30px;
+    font-weight: bold;
+    font-size: medium;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    margin-left: 1050px;
+}
+
+.download-btn:hover{
+    background-color: #FF8B5A;
+}
+
+
+.download-container{
+    position: relative;
+}
+
+.download-popup{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-box {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 450px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    /* text-align: center; */
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
+}
+
+
+.popup-div-1{
+    align-items: end;
+}
+
+.popup-div-2{
+    text-align: start;
+    display: flex;
+    margin: 0;
+    margin-left: 10px;
+    gap: 180px;
+}
+
+.popup-div-3{
+    text-align: start;
+    display: flex;
+    margin: 0;
+    gap: 50px;
+}
+
+
+.popup-div-4{
+    text-align: start;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 10px;
+    padding: 10px;
+}
+
+.popup-label{
+    text-align: start;
+    margin: 0;
+}
+
+.input-date{
+    margin: 2px;
+    width: 180px;
+}
+
+
+
+.download-popup button{
+    padding: 10px 20px 10px 20px;
+    margin: 10px;
+    border: none;
+    background:  #007bff;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.download-popup button:hover{
+    background-color:  #FF8B5A;
+}
+
+.chart-btn{
+    padding: 10px;
+    margin-right: 10px;
+    border: none;
+    background:  #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.input-email{
+    width: 300px;
+    margin-bottom: 20px;
+}
+
+.input-type{
+    width: 150px;
+    height: 30px;
+
+}
+
+.popup-close{
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    margin-left: 390px;
+    margin-bottom: 10px;
+    background-color: white;
+}
+
+.email-submit-btn{
+    margin-top: 50px;
+    width: 200px;
+}

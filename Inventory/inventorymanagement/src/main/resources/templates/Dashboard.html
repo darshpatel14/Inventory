@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory Dashboard</title>
+</head>
+
+<style>
+
+     body{
+        background: linear-gradient(120deg,#2980b9,#6dd5fa);
+        margin: 0;
+     }
+
+
+     .main-container{
+         width: auto;
+         height: fit-content;
+         padding: 0;
+         display: flex;
+         /*gap: 10px;*/
+     }
+
+     .navigation-bar{
+         height: 700px;
+         width: 280px;
+         background-color: white;
+         padding: 10px;
+         display: flex;
+         flex-direction: column;
+         /*box-shadow: 0px 0px 5px white;*/
+         border-radius: 5px;
+     }
+
+     .main-content{
+         /*border: 2px solid;*/
+         width:1000px;
+     }
+
+     .heading{
+         justify-content: center;
+         text-align: center;
+         color: #2980b9;
+         font-size: 25px;
+     }
+
+     .btn{
+         margin: 20px 20px 5px 20px;
+         padding: 15px;
+         background-color: #2980b9;
+         color: white;
+         font-size: 20px;
+         font-family: Calibri;
+         border: none;
+         border-radius: 5px;
+     }
+
+     .btn:hover{
+         background-color: #27ae60;
+         color: white;
+     }
+
+
+
+</style>
+<body>
+        <div class="main-container">
+
+
+            <div class="navigation-bar">
+                <h1 class="heading">Inventory Management System</h1>
+                <button class="btn" onclick="loadCategoryForm()">Add Category</button>
+                <button class="btn">Add Category</button>
+                <button class="btn">Add Category</button>
+                <button class="btn">Add Category</button>
+                <button class="btn">Add Category</button>
+
+            </div>
+
+            <div class="main-content">
+
+            </div>
+        </div>
+
+</body>
+
+
+<script>
+    function loadCategoryForm() {
+        fetch('/addCategory')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('mainContent').innerHTML = data;
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+
+
+</html>
