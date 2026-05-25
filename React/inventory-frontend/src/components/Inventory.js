@@ -1,21 +1,27 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./css/inventory.css";
-import { useNavigate } from "react-router-dom";
 import closeimg from "./icon/close.png";
 
 function Inventory() {
+
+  // ---------------- STATE ----------------
+
   const [inventory, setInventory] = useState([]);
 
-  const [error, setError] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
 
-  const navigate = useNavigate();
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSupplier, setSelectedSupplier] = useState("");
+  const [selectedStockFilter, setSelectedStockFilter] = useState("");
+
+  const [error, setError] = useState("");
 
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
   const [showPopup, setShowPopup] = useState(false);
-
   const [showEmailPopup, setShowEmailPopup] = useState(false);
 
   const [emailData, setEmailData] = useState({
@@ -23,28 +29,122 @@ function Inventory() {
     type: "csv",
   });
 
-  // FETCH INVENTORY
+
+  const [page, setPage] = useState(0);
+  const [size] = useState(2);
+
+  const [totalPages, setTotalPages] = useState(0);
+
+  const [sortBy, setSortBy] = useState("");
+  const [ascending, setAscending] = useState(true);
+
+
   useEffect(() => {
-    fetchInventory();
-  }, []);
+    fetchInventory(page);
 
-  const fetchInventory = async () => {
+    fetchCategories();
+
+    fetchSuppliers();
+  }, [page, sortBy, ascending]);
+
+
+  const fetchInventory = async (pageNumber = 0) => {
     try {
-      setInventory({
-        fromDate: "",
-        toDate: "",
-        emailData: "",
-      });
+      const res = await axios.get(
+        "http://localhost:8080/inventory/alldata/data",
+        {
+          params: {
+            page: pageNumber,
+            size: size,
+            sortBy: sortBy,
+            ascending: ascending,
+          },
+        },
+      );
 
-      const response = await axios.get("http://localhost:8080/inventory/data");
-
-      setInventory(response.data);
+      setInventory(res.data.content || []);
+      setTotalPages(res.data.totalPages || 0);
     } catch (err) {
+      console.log(err);
+
       setError("Failed to load inventory data");
     }
   };
 
-  // DOWNLOAD
+
+
+  // -- FETCH CATEGORIES ---
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:8080/inventory/alldata/categories",
+      );
+
+      setCategories(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+
+
+  // ---  FETCH SUPPLIERS ---
+  const fetchSuppliers = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:8080/inventory/alldata/suppliers",
+      );
+
+      setSuppliers(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+
+
+  const handleSearch = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:8080/inventory/alldata/filter",
+        {
+          params: {
+            categoryName: selectedCategory || null,
+            supplierName: selectedSupplier || null,
+            stockFilter: selectedStockFilter || null,
+          },
+        },
+      );
+
+      setInventory(res.data);
+
+      setTotalPages(1);
+
+      setPage(0);
+    } catch (err) {
+      console.log(err);
+
+      alert("Failed to filter data");
+    }
+  };
+
+
+
+  const handleReset = () => {
+    setSelectedCategory("");
+
+    setSelectedSupplier("");
+
+    setSelectedStockFilter("");
+
+    setPage(0);
+
+    fetchInventory(0);
+  };
+
+
+
+  // --- DOWNLOAD ---
   const handleDownload = (type) => {
     if (!fromDate || !toDate) {
       alert("Please select dates");
@@ -53,15 +153,17 @@ function Inventory() {
     }
 
     window.open(
-      `http://localhost:8080/inventory/export/${type}` +
-        `?fromDate=${fromDate}&toDate=${toDate}`,
+      `http://localhost:8080/inventory/alldata/export/${type}?fromDate=${fromDate}&toDate=${toDate}`,
       "_blank",
     );
 
     setShowPopup(false);
   };
 
-  // SEND EMAIL
+
+
+
+  // --- EMAIL ---
   const sendEmail = async () => {
     if (!emailData.email) {
       alert("Please enter email");
@@ -70,40 +172,127 @@ function Inventory() {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/inventory/email-report",
+      const res = await axios.post(
+        "http://localhost:8080/inventory/alldata/email-report",
         {
           email: emailData.email,
           type: emailData.type,
-          fromDate: fromDate,
-          toDate: toDate,
+          fromDate,
+          toDate,
         },
       );
 
-      alert(response.data);
+      alert(res.data);
 
       setShowEmailPopup(false);
 
       setShowPopup(false);
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
 
       alert("Failed to send email");
     }
   };
 
-  if (error) {
-    return <h2>{error}</h2>;
-  }
+
+
+  // -- PAGINATION --
+  const handlePrevious = () => {
+    if (page > 0) {
+      setPage(page - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (page < totalPages - 1) {
+      setPage(page + 1);
+    }
+  };
+
+  if (error) return <h2>{error}</h2>;
+
+
+
 
   return (
+
+
     <div className="inventory-container">
-      <div className="inventory-header">
-        <h2>Inventory Details</h2>
+
+      <div className="top-controls">
+
+
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          <option value="">Select Category</option>
+
+          {categories.map((c) => (
+            <option key={c.categoryId} value={c.categoryName}>
+              {c.categoryName}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={selectedSupplier}
+          onChange={(e) => setSelectedSupplier(e.target.value)}
+        >
+          <option value="">Select Supplier</option>
+
+          {suppliers.map((s) => (
+            <option key={s.supplierId} value={s.supplierName}>
+              {s.supplierName}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={selectedStockFilter}
+          onChange={(e) => setSelectedStockFilter(e.target.value)}
+        >
+          <option value="">Stock Filter</option>
+
+          <option value="lt10">Less than 10</option>
+
+          <option value="lt50">Less than 50</option>
+
+          <option value="lt100">Less than 100</option>
+
+          <option value="gt100">Greater than 100</option>
+        </select>
+
+        <button className="download-btn" onClick={handleSearch}>
+          Search
+        </button>
+
+        <button className="download-btn" onClick={handleReset}>
+          Reset
+        </button>
 
         <button className="download-btn" onClick={() => setShowPopup(true)}>
           Download
         </button>
+      </div>
+
+      <div className="sort-controls">
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value="">Sort By</option>
+          <option value="id">ID</option>
+          <option value="currentStock">Current Stock</option>
+          <option value="stockIn">Stock In</option>
+          <option value="stockOut">Stock Out</option>
+        </select>
+
+        <button className="download-btn" onClick={() => setAscending(!ascending)}>
+          {ascending ? "Ascending ↑" : "Descending ↓"}
+        </button>
+      </div>
+
+
+      <div className="inventory-content">
+        <h2>Inventory Details</h2>
       </div>
 
       <table className="inventory-table">
@@ -119,7 +308,7 @@ function Inventory() {
         </thead>
 
         <tbody>
-          {inventory.length > 0 ? (
+          {inventory && inventory.length > 0 ? (
             inventory.map((item) => (
               <tr key={item.id}>
                 <td>{item.id}</td>
@@ -141,122 +330,175 @@ function Inventory() {
             ))
           ) : (
             <tr>
-              <td colSpan="6">No Inventory Data Found</td>
+              <td colSpan="6" style={{ textAlign: "center" }}>
+                No Data Available
+              </td>
             </tr>
           )}
         </tbody>
       </table>
 
-      {/* DOWNLOAD POPUP */}
+      <div className="pagination-container">
+        <button
+          className="pagination-btn"
+          onClick={handlePrevious}
+          disabled={page === 0}
+        >
+          Previous
+        </button>
+
+        <span className="page-info">
+          Page {page + 1} of {totalPages}
+        </span>
+
+        <button
+          className="pagination-btn"
+          onClick={handleNext}
+          disabled={page >= totalPages - 1}
+        >
+          Next
+        </button>
+      </div>
+
 
       {showPopup && (
-        <div className="download-popup">
-          <div className="popup-box">
-            <div className="popup-div-1">
+        <div className="download-overlay">
+          <div className="download-modal">
+            
+            <div className="download-header">
+              <h2>Download Report</h2>
+
               <img
-                className="popup-close"
+                className="download-close"
                 src={closeimg}
                 alt="Close"
                 onClick={() => setShowPopup(false)}
               />
             </div>
 
-            <div className="popup-div-2">
-              <label className="popup-label">From:</label>
-              <label className="popup-label">To:</label>
-            </div>
+            <div className="download-body">
 
-            <div className="popup-div-3">
-              <input
-                className="input-date"
-                type="date"
-                value={fromDate}
-                onChange={(e) => setFromDate(e.target.value)}
-              />
+              <div className="date-section">
+                <div className="date-field">
+                  <label>From Date</label>
 
-              <input
-                className="input-date"
-                type="date"
-                value={toDate}
-                onChange={(e) => setToDate(e.target.value)}
-              />
-            </div>
+                  <input
+                    className="download-date-input"
+                    type="date"
+                    value={fromDate}
+                    onChange={(e) => setFromDate(e.target.value)}
+                  />
+                </div>
 
-            <div className="popup-div-4">
-            
-              <button onClick={() => handleDownload("csv")}>CSV</button>
+                <div className="date-field">
+                  <label>To Date</label>
 
-              <button onClick={() => handleDownload("pdf")}>PDF</button>
+                  <input
+                    className="download-date-input"
+                    type="date"
+                    value={toDate}
+                    onChange={(e) => setToDate(e.target.value)}
+                  />
+                </div>
+              </div>
 
-              <button onClick={() => handleDownload("json")}>JSON</button>
+              <div className="download-buttons">
+                <button onClick={() => handleDownload("csv")}>CSV</button>
 
-              <button>Img</button>
+                <button onClick={() => handleDownload("pdf")}>PDF</button>
 
-              <button onClick={() => navigate("/inventory-chart")}>
-                Bar Graph
-              </button>
+                <button onClick={() => handleDownload("json")}>JSON</button>
 
-              <button
-                onClick={() => {
-                  if (!fromDate || !toDate) {
-                    alert("Please select dates");
-                    return;
-                  }
+                <button>IMG</button>
 
-                  setShowEmailPopup(true);
-                }}
-              >
-                Email
-              </button>
+                <button
+                  className="email-report-btn"
+                  onClick={() => {
+                    if (!fromDate || !toDate) {
+                      alert("Please select dates");
+
+                      return;
+                    }
+
+                    setShowEmailPopup(true);
+                  }}
+                >
+                  Email Report
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* EMAIL POPUP */}
 
       {showEmailPopup && (
-        <div className="download-popup">
-          <div className="popup-box">
 
-            <div className="popup-div-1">
+        <div className="email-popup-overlay">
+          <div className="email-popup-box">
+
+            <div className="email-popup-header">
+              <h2>Email Report</h2>
+
               <img
-                className="popup-close"
+                className="email-popup-close"
                 src={closeimg}
                 alt="Close"
                 onClick={() => setShowEmailPopup(false)}
               />
             </div>
 
-            <input
-              className="input-email"
-              type="email"
-              placeholder="Enter Email"
-              value={emailData.email}
-              onChange={(e) =>
-                setEmailData({
-                  ...emailData,
-                  email: e.target.value,
-                })
-              }
-            />
+            <div className="email-popup-body">
+              <div className="email-field">
+                <label>Email Address</label>
 
-            <select
-              className="input-type"
-              value={emailData.type}
-              onChange={(e) =>
-                setEmailData({
-                  ...emailData,
-                  type: e.target.value,
-                })
-              }
-            >
-              <option value="csv">CSV</option>
+                <input
+                  className="email-input"
+                  type="email"
+                  placeholder="Enter your email"
+                  value={emailData.email}
+                  onChange={(e) =>
+                    setEmailData({
+                      ...emailData,
+                      email: e.target.value,
+                    })
+                  }
+                />
+              </div>
 
-              <option value="pdf">PDF</option>
-            </select>
+              <div className="email-field">
+                <label>Select File Type</label>
 
-            <button className="email-submit-btn"  onClick={sendEmail}>Send Email</button>
+                <select
+                  className="email-select"
+                  value={emailData.type}
+                  onChange={(e) =>
+                    setEmailData({
+                      ...emailData,
+                      type: e.target.value,
+                    })
+                  }
+                >
+                  <option value="csv">CSV</option>
+
+                  <option value="pdf">PDF</option>
+
+                  <option value="json">JSON</option>
+                </select>
+              </div>
+
+              <div className="email-date-info">
+                <p>Report Date Range:</p>
+
+                <span>
+                  {fromDate} → {toDate}
+                </span>
+              </div>
+
+              <button className="send-email-btn" onClick={sendEmail}>
+                Send Report
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -265,4 +507,3 @@ function Inventory() {
 }
 
 export default Inventory;
- 

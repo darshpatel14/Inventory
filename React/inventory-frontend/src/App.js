@@ -6,7 +6,6 @@ import AddSupplier from "./components/AddSupplier";
 import AddSales from "./components/AddSales";
 import AddUser from "./components/AddUser";
 import Inventory from "./components/Inventory";
-import InventoryChart from "./components/InventoryChart";
 import Dashboard from "./components/Dashboard";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -25,7 +24,6 @@ function App() {
         <Route path="/add-sales" element={ <AddSales/>} />
         <Route path="/add-user" element={ <AddUser/>} />
         <Route path="/view-Inventory" element={ <Inventory/>} />
-        <Route path="/inventory-chart" element={<InventoryChart />} />
 
 
       </Routes>

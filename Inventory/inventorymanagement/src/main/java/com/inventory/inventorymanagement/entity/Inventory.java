@@ -19,7 +19,7 @@ public class Inventory {
     private Integer id;
 
     // MANY INVENTORY -> ONE PRODUCT
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 

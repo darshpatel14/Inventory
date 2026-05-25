@@ -1,8 +1,8 @@
 body {
   margin: 0;
-  /* padding: 10px; */
-  background: linear-gradient(120deg,#2980b9,#6dd5fa);
+  background-color: white;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  align-items: center;
 }
 
 .sales-container {

@@ -1,19 +1,19 @@
 body {
    margin: 0;   
-   align-items: start;
-   background: linear-gradient(120deg,#2980b9,#6dd5fa);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: white;
+   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .inventory-container {
     width: 95%;
     margin: auto;
-    margin-top: 30px;
+    margin-top:    0px;
     background: white;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
 }
+
 
 h2 {
     text-align: center;
@@ -45,9 +45,12 @@ h2 {
     background: #ddd;
 }
 
-.inventory-header{
+
+.inventory-content{
     display: flex;
+    margin-top: 0px;
 }
+
 
 .download-btn{
     align-items: end;
@@ -60,7 +63,7 @@ h2 {
     border: none;
     border-radius: 5px;
     margin-bottom: 10px;
-    margin-left: 1050px;
+    margin-left: 10px;
 }
 
 .download-btn:hover{
@@ -92,40 +95,12 @@ h2 {
     width: 450px;
     height: 300px;
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    /* flex-direction: column; */
     /* text-align: center; */
     box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
 }
 
-
-.popup-div-1{
-    align-items: end;
-}
-
-.popup-div-2{
-    text-align: start;
-    display: flex;
-    margin: 0;
-    margin-left: 10px;
-    gap: 180px;
-}
-
-.popup-div-3{
-    text-align: start;
-    display: flex;
-    margin: 0;
-    gap: 50px;
-}
-
-
-.popup-div-4{
-    text-align: start;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin: 10px;
-    padding: 10px;
-}
 
 .popup-label{
     text-align: start;
@@ -163,27 +138,299 @@ h2 {
     cursor: pointer;
 }
 
-.input-email{
-    width: 300px;
-    margin-bottom: 20px;
+
+.top-controls{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
 }
 
-.input-type{
-    width: 150px;
-    height: 30px;
-
+.product-dropdown{
+    width: 220px;
+    height: 35px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding-left: 10px;
 }
 
-.popup-close{
+.search-btn,
+.reset-btn{
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
     cursor: pointer;
-    width: 20px;
-    height: 20px;
-    margin-left: 390px;
-    margin-bottom: 10px;
-    background-color: white;
+    font-weight: bold;
 }
 
-.email-submit-btn{
-    margin-top: 50px;
-    width: 200px;
+.search-btn:hover,
+.reset-btn:hover{
+    background-color: #FF8B5A;
+}
+
+
+.email-popup-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    backdrop-filter: blur(3px);
+}
+
+.email-popup-box{
+    width: 420px;
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    animation: popupAnimation 0.25s ease;
+}
+
+@keyframes popupAnimation{
+    from{
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    to{
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.email-popup-header{
+    background: #007bff;
+    color: white;
+    padding: 18px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.email-popup-header h2{
+    margin: 0;
+    font-size: 22px;
+}
+
+.email-popup-close{
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    transition: 0.2s;
+    background: white;
+    border-radius: 50%;
+    padding: 3px;
+}
+
+.email-popup-close:hover{
+    transform: rotate(90deg);
+}
+
+.email-popup-body{
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.email-field{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.email-field label{
+    font-weight: 600;
+    color: #333;
+}
+
+.email-input,
+.email-select{
+    height: 45px;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    padding: 0 14px;
+    font-size: 15px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.email-input:focus,
+.email-select:focus{
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.15);
+}
+
+.email-date-info{
+    background: #f5f7fb;
+    padding: 12px 15px;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.email-date-info p{
+    margin: 0;
+    font-weight: 600;
+    color: #444;
+}
+
+.email-date-info span{
+    color: #666;
+}
+
+.send-email-btn{
+    height: 48px;
+    border: none;
+    border-radius: 10px;
+    background: #007bff;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.send-email-btn:hover{
+    background: #FF8B5A;
+    transform: translateY(-1px);
+}
+
+
+
+.download-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1500;
+    backdrop-filter: blur(3px);
+}
+
+.download-modal{
+    width: 520px;
+    background: #ffffff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+    animation: downloadPopupAnim 0.25s ease;
+}
+
+@keyframes downloadPopupAnim{
+    from{
+        opacity: 0;
+        transform: scale(0.92);
+    }
+
+    to{
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.download-header{
+    background: #007bff;
+    color: white;
+    padding: 18px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.download-header h2{
+    margin: 0;
+    font-size: 24px;
+}
+
+.download-close{
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    background: white;
+    border-radius: 50%;
+    padding: 4px;
+    transition: 0.25s;
+}
+
+.download-close:hover{
+    transform: rotate(90deg);
+}
+
+.download-body{
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+
+.date-section{
+    display: flex;
+    gap: 20px;
+}
+
+.date-field{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.date-field label{
+    font-weight: 600;
+    color: #333;
+}
+
+.download-date-input{
+    height: 45px;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    padding: 0 14px;
+    font-size: 15px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.download-date-input:focus{
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.15);
+}
+
+
+.download-buttons{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.download-buttons button{
+    flex: 1 1 140px;
+    height: 48px;
+    border: none;
+    border-radius: 10px;
+    background: #007bff;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.download-buttons button:hover{
+    background: #FF8B5A;
+    transform: translateY(-2px);
+}
+
+.email-report-btn{
+    background: #28a745 ;
+}
+
+.email-report-btn:hover{
+    background: #218838;
 }
